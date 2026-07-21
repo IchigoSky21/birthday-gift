@@ -223,7 +223,7 @@
     clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
   }
   .key {
-    position: absolute; top: 50%; right: -80px;
+    position: absolute; top: 50%; right: -40px;
     transform: translateY(-50%) rotate(90deg);
     cursor: pointer; z-index: 4;
     animation: keyBob 2.2s ease-in-out infinite;
@@ -486,9 +486,9 @@ const THEMES = [
 // PLAYLIST — Tambah/hapus lagu di sini
 // ============================================
 const PLAYLIST = [
-  { file: 'monokrom.mp3',  title: 'Monokrom',             artist: 'Tulus',              startAt: 30 },
-  { file: 'jtwya.mp3',     title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 16 },
-  { file: 'omg.mp3',       title: 'OMG',                   artist: 'NewJeans',           startAt: 45 },
+  { file: 'monokrom.mp3',  title: 'Monokrom',              artist: 'Tulus',              startAt: 30 },
+  { file: 'jtwya.mp3',     title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 15 },
+  { file: 'omg.mp3',       title: 'OMG',                   artist: 'NewJeans',           startAt: 40 },
   { file: 'apt.mp3',       title: 'APT',                   artist: 'ROSÉ & Bruno Mars',  startAt: 0  }
 ];
 let currentTheme = null;
@@ -600,7 +600,7 @@ bgMusic.addEventListener('play', updatePlayerUI);
 bgMusic.addEventListener('pause', updatePlayerUI);
 vinylWrap.addEventListener('click', () => {
   if (bgMusic.paused) {
-    bgMusic.volume = 0.3;
+    bgMusic.volume = 0.2;
     bgMusic.play().catch(() => {});
   } else {
     bgMusic.pause();
