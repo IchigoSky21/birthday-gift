@@ -344,6 +344,39 @@
   @keyframes eqBounce { 0% { height: 3px; } 100% { height: 14px; } }
   .confetti-piece { position: fixed; top: -20px; z-index: 10; pointer-events: none; animation: confettiFall linear forwards; }
   @keyframes confettiFall { to { transform: translateY(105vh) rotate(540deg); opacity: 0; } }
+  /* ========== ACTION BUTTON (download) ========== */
+  .action-row { margin-top: 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .action-btn {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--cream);
+    background: rgba(255,246,229,0.1);
+    border: 1px solid rgba(255,246,229,0.25);
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+  }
+  .action-btn:hover { background: rgba(255,246,229,0.18); border-color: var(--accent); }
+  .action-btn:active { transform: scale(0.97); }
+  .action-btn:disabled { opacity: 0.6; cursor: default; }
+  .action-feedback {
+    font-size: 0.78rem;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    height: 1em;
+  }
+  .action-feedback.show { opacity: 1; }
+  /* ========== KEYBOARD FOCUS ========== */
+  .key:focus-visible,
+  .vinyl-wrap:focus-visible,
+  .progress-bar:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 </style>
 </head>
 <body>
@@ -357,11 +390,11 @@
         <h2>🎂 Birthday Card</h2>
         <p>Create a birthday card for someone special</p>
         <div class="input-group">
-          <label>NAME</label>
+          <label for="inputName">NAME</label>
           <input type="text" id="inputName" placeholder="e.g. Name" maxlength="30" />
         </div>
         <div class="input-group">
-          <label>AGE</label>
+          <label for="inputAge">AGE</label>
           <input type="number" id="inputAge" placeholder="e.g. 1" min="1" max="150" />
         </div>
         <button class="create-btn" id="createBtn">Create Birthday Card ✨</button>
@@ -376,7 +409,7 @@
         <div class="door-panel door-left"></div>
         <div class="door-panel door-right"></div>
         <div class="keyhole"></div>
-        <div class="key" id="keyBtn"><svg viewBox="0 0 64 64"><circle cx="18" cy="18" r="13" fill="none" stroke="var(--metal)" stroke-width="7"/><rect x="16" y="28" width="6" height="30" fill="var(--metal)"/><rect x="16" y="46" width="14" height="6" fill="var(--metal)"/><rect x="16" y="54" width="10" height="5" fill="var(--metal)"/></svg></div>
+        <div class="key" id="keyBtn" role="button" tabindex="0" aria-label="Klik atau tekan Enter untuk membuka pintu dengan kunci"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="18" cy="18" r="13" fill="none" stroke="var(--metal)" stroke-width="7"/><rect x="16" y="28" width="6" height="30" fill="var(--metal)"/><rect x="16" y="46" width="14" height="6" fill="var(--metal)"/><rect x="16" y="54" width="10" height="5" fill="var(--metal)"/></svg></div>
       </div>
       <p class="hint">Click the key to unlock ✨</p>
     </div>
@@ -399,11 +432,11 @@
           <p class="signoff" id="txtSignoff"></p>
         </div>
         <div class="mini-player" id="miniPlayer">
-          <div class="vinyl-wrap" id="vinylWrap">
+          <div class="vinyl-wrap" id="vinylWrap" role="button" tabindex="0" aria-label="Putar atau jeda musik">
             <div class="vinyl" id="vinyl"></div>
             <div class="vinyl-overlay">
-              <svg id="iconPlay" viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
-              <svg id="iconPause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+              <svg id="iconPlay" viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,4 20,12 8,20"/></svg>
+              <svg id="iconPause" viewBox="0 0 24 24" style="display:none" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
             </div>
           </div>
           <div class="player-info">
@@ -421,18 +454,23 @@
             </div>
             <div class="progress-row">
               <span class="progress-time" id="timeCurrent">0:00</span>
-              <div class="progress-bar" id="progressBar">
+              <div class="progress-bar" id="progressBar" role="button" tabindex="0" aria-label="Klik untuk melompat ke bagian lagu">
                 <div class="progress-fill" id="progressFill"></div>
               </div>
               <span class="progress-time total" id="timeTotal">0:00</span>
             </div>
           </div>
         </div>
+        <div class="action-row">
+          <button class="action-btn" id="downloadBtn">📸 Simpan sebagai gambar</button>
+          <span class="action-feedback" id="downloadFeedback">Gambar berhasil disimpan! Cek folder download ✅</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <audio id="bgMusic" loop></audio>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // ============================================
 // THEMES
@@ -568,10 +606,18 @@ vinylWrap.addEventListener('click', () => {
     bgMusic.pause();
   }
 });
+vinylWrap.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vinylWrap.click(); }
+});
 progressBar.addEventListener('click', (e) => {
   if (!bgMusic.duration) return;
   const rect = progressBar.getBoundingClientRect();
   bgMusic.currentTime = ((e.clientX - rect.left) / rect.width) * bgMusic.duration;
+});
+progressBar.addEventListener('keydown', (e) => {
+  if (!bgMusic.duration) return;
+  if (e.key === 'ArrowRight') { bgMusic.currentTime = Math.min(bgMusic.duration, bgMusic.currentTime + 5); }
+  if (e.key === 'ArrowLeft')  { bgMusic.currentTime = Math.max(0, bgMusic.currentTime - 5); }
 });
 function setupMusic() {
   chosenSong = PLAYLIST[Math.floor(Math.random() * PLAYLIST.length)];
@@ -585,6 +631,30 @@ function tryPlayMusic() {
   bgMusic.play().then(() => updatePlayerUI()).catch(() => {});
 }
 // ============================================
+// TINY UI SOUNDS (Web Audio, no extra audio files needed)
+// ============================================
+let audioCtx;
+function playTone(freq, duration, delay) {
+  delay = delay || 0;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    setTimeout(() => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.14, audioCtx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }, delay);
+  } catch (e) { /* Web Audio not available, fail silently */ }
+}
+function playUnlockSound() { playTone(520, 0.1); playTone(780, 0.12, 90); }
+function playWishSound() { playTone(660, 0.08); playTone(880, 0.08, 70); playTone(1100, 0.14, 140); }
+// ============================================
 // SCENE: INPUT → DOOR
 // ============================================
 const sceneInput = document.getElementById('scene-input');
@@ -594,22 +664,13 @@ const doorFrame = document.getElementById('doorFrame');
 const keyBtn = document.getElementById('keyBtn');
 const pullBtn = document.getElementById('pullBtn');
 const createBtn = document.getElementById('createBtn');
-createBtn.addEventListener('click', () => {
-  const nameVal = document.getElementById('inputName').value.trim();
-  const ageVal = parseInt(document.getElementById('inputAge').value, 10);
-  if (!nameVal || isNaN(ageVal) || ageVal < 1) {
-    document.getElementById('inputName').style.borderColor = nameVal ? '' : '#FB7185';
-    document.getElementById('inputAge').style.borderColor = (isNaN(ageVal) || ageVal < 1) ? '#FB7185' : '';
-    return;
-  }
-  userName = nameVal;
-  userAge = ageVal;
-  // Random theme
+function applyCard(name, age) {
+  userName = name;
+  userAge = age;
   currentTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
   applyTheme(currentTheme);
   const dots = themePreview.querySelectorAll('.theme-dot');
   dots.forEach((d, i) => d.classList.toggle('active', THEMES[i] === currentTheme));
-  // Random music
   setupMusic();
   // Fill dynamic text
   document.title = userName + ' — Birthday Card 🎂';
@@ -642,6 +703,16 @@ createBtn.addEventListener('click', () => {
   bgMusic.pause();
   bgMusic.currentTime = 0;
   updatePlayerUI();
+}
+createBtn.addEventListener('click', () => {
+  const nameVal = document.getElementById('inputName').value.trim();
+  const ageVal = parseInt(document.getElementById('inputAge').value, 10);
+  if (!nameVal || isNaN(ageVal) || ageVal < 1) {
+    document.getElementById('inputName').style.borderColor = nameVal ? '' : '#FB7185';
+    document.getElementById('inputAge').style.borderColor = (isNaN(ageVal) || ageVal < 1) ? '#FB7185' : '';
+    return;
+  }
+  applyCard(nameVal, ageVal);
   // Transition
   sceneInput.classList.add('hidden');
   setTimeout(() => { sceneDoor.classList.add('visible'); }, 400);
@@ -649,13 +720,18 @@ createBtn.addEventListener('click', () => {
 // ============================================
 // SCENE: DOOR → BADGE
 // ============================================
-keyBtn.addEventListener('click', () => {
+function openDoor() {
   if (opened) return;
   opened = true;
+  playUnlockSound();
   doorFrame.classList.add('open');
   setTimeout(() => { burstConfetti(90); sceneDoor.classList.add('hidden'); sceneDoor.classList.remove('visible'); }, 500);
   setTimeout(() => { sceneBadge.classList.add('visible'); }, 850);
   tryPlayMusic();
+}
+keyBtn.addEventListener('click', openDoor);
+keyBtn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDoor(); }
 });
 // ============================================
 // PULL BUTTON → NOTE
@@ -663,6 +739,7 @@ keyBtn.addEventListener('click', () => {
 pullBtn.addEventListener('click', () => {
   if (pulled) return;
   pulled = true;
+  playWishSound();
   const flags = document.querySelectorAll('.flag');
   flags.forEach((f, idx) => {
     setTimeout(() => { f.style.background = f.dataset.color; f.classList.add('lit'); }, idx * 45);
@@ -671,6 +748,44 @@ pullBtn.addEventListener('click', () => {
   pullBtn.disabled = true;
   pullBtn.textContent = 'Your wishes are sent to the sky ☁️';
   setTimeout(() => { document.getElementById('note').classList.add('revealed'); }, 700);
+});
+// ============================================
+// DOWNLOAD CARD AS IMAGE
+// ============================================
+const downloadBtn = document.getElementById('downloadBtn');
+const downloadFeedback = document.getElementById('downloadFeedback');
+downloadBtn.addEventListener('click', async () => {
+  if (typeof html2canvas === 'undefined') {
+    downloadFeedback.textContent = 'Gagal memuat alat screenshot — cek koneksi internet ya.';
+    downloadFeedback.classList.add('show');
+    return;
+  }
+  downloadBtn.disabled = true;
+  const originalLabel = downloadBtn.textContent;
+  downloadBtn.textContent = 'Menyiapkan gambar...';
+  try {
+    const target = document.querySelector('.badge-col');
+    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-deep').trim() || '#0A4F50';
+    const canvas = await html2canvas(target, {
+      backgroundColor: bgColor,
+      scale: 2,
+      useCORS: true
+    });
+    const link = document.createElement('a');
+    const safeName = (userName || 'kartu').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    link.download = 'ucapan-ulang-tahun-' + (safeName || 'kartu') + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    downloadFeedback.classList.add('show');
+    clearTimeout(downloadBtn._feedbackTimer);
+    downloadBtn._feedbackTimer = setTimeout(() => downloadFeedback.classList.remove('show'), 3000);
+  } catch (err) {
+    downloadFeedback.textContent = 'Gagal membuat gambar. Coba lagi ya.';
+    downloadFeedback.classList.add('show');
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = originalLabel;
+  }
 });
 </script>
 </body>
