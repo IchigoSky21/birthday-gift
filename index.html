@@ -653,7 +653,7 @@ keyBtn.addEventListener('click', () => {
   if (opened) return;
   opened = true;
   doorFrame.classList.add('open');
-  setTimeout(() => { burstConfetti(90); sceneDoor.classList.add('hidden'); }, 500);
+  setTimeout(() => { burstConfetti(90); sceneDoor.classList.add('hidden'); sceneDoor.classList.remove('visible'); }, 500);
   setTimeout(() => { sceneBadge.classList.add('visible'); }, 850);
   tryPlayMusic();
 });
