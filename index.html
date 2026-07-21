@@ -358,11 +358,11 @@
         <p>Create a birthday card for someone special</p>
         <div class="input-group">
           <label>NAME</label>
-          <input type="text" id="inputName" placeholder="e.g. Gracie" maxlength="30" />
+          <input type="text" id="inputName" placeholder="e.g. Name" maxlength="30" />
         </div>
         <div class="input-group">
           <label>AGE</label>
-          <input type="number" id="inputAge" placeholder="e.g. 21" min="1" max="150" />
+          <input type="number" id="inputAge" placeholder="e.g. 1" min="1" max="150" />
         </div>
         <button class="create-btn" id="createBtn">Create Birthday Card ✨</button>
         <div class="theme-preview" id="themePreview"></div>
@@ -619,7 +619,7 @@ createBtn.addEventListener('click', () => {
   document.getElementById('txtMedalNum').textContent = userAge;
   document.getElementById('txtGreeting').textContent = userName + ', 생일 축하해! 🎉';
   document.getElementById('txtBody1').textContent = 'Wishing you abundant health, endless opportunities, and may your plans and dreams unfold smoothly. May your heart and mind always be at peace and full of gratitude, no matter what happens.';
-  document.getElementById('txtBody2').textContent = 'Turning ' + userAge + ' is a beautiful milestone — may you embrace it with confidence, surrounded by people who love you, and always remain the warm, wonderful person we know.';
+  document.getElementById('txtBody2').textContent = 'Turning ' + userAge + ' is a beautiful milestone may you embrace it with confidence, surrounded by people who love you, and always remain the warm, wonderful person we know.';
   document.getElementById('txtSignoff').textContent = 'Happy birthday, ' + userName + '! 🎂💛';
   // Generate flags
   const flagsContainer = document.getElementById('flags');
