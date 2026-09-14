@@ -1,171 +1,178 @@
-<div align="center">
-
 # 🎂 Birthday Card Generator
 
-### ✨ Ucapan ulang tahun interaktif yang bisa digunakan untuk siapa saja ✨
+![HTML5](https://img.shields.io/badge/HTML5-Static_App-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-Animations-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-<br/>
+An interactive birthday card experience built as a single-page static web application. Enter a recipient's name and age, then reveal a personalized animated card with a randomized visual theme, background music, sound effects, confetti, and a downloadable PNG version.
 
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+## 🌐 Live Demo
 
-[🔗 Live Demo](https://ichigosky21.github.io/birthday-gift/) 
+**[Open the Birthday Card Generator](https://ichigosky21.github.io/birthday-gift/)**
 
-</div>
+## ✨ Features
 
----
+- **Personalized greeting** — Generates the birthday card from the recipient's name and age.
+- **Five randomized themes** — Teal & Gold, Purple Dream, Midnight Rose, Forest Glow, and Sunset Blaze.
+- **Interactive door sequence** — Unlock the card through an animated door-and-key interaction.
+- **Age-based badge** — Displays the recipient's age as a medal-style badge.
+- **Dynamic celebration effects** — Confetti and floating birthday-themed emojis are generated during the experience.
+- **Birthday message** — Includes a personalized greeting and Korean birthday phrase (`생일 축하해!`).
+- **Background music player** — Randomly selects one bundled track and provides play/pause, progress, and seeking controls.
+- **Web Audio UI sounds** — Generates short interaction sounds with the Web Audio API instead of additional sound-effect files.
+- **Save as PNG** — Uses `html2canvas` to capture the generated card as an image.
+- **Responsive interface** — Designed for both desktop and mobile screens.
+- **Keyboard-friendly controls** — Interactive controls include keyboard handling and ARIA labels in the interface.
 
-## 📖 Tentang Project
-
-**Birthday Card Generator** adalah kartu ucapan ulang tahun digital yang interaktif dan penuh animasi. Cukup masukkan **nama** dan **usia** penerima, maka kartu unik akan dihasilkan secara otomatis lengkap dengan tema warna random, musik latar, dan animasi yang memukau.
-
-> 💡 Dibuat sebagai hadiah personal, tapi bisa digunakan oleh siapa saja untuk siapa saja!
-
----
-
-## 🎮 Cara Kerja
+## 🎬 User Flow
 
 ```text
-📝 Input Nama & Usia  →  🚪 Animasi Pintu & Kunci  →  🏅 Badge & Ucapan  →  🎵 Iringan Musik 
+Enter name & age
+       ↓
+Create personalized card
+       ↓
+Random theme + music selected
+       ↓
+Unlock the animated door
+       ↓
+Birthday badge + celebration effects
+       ↓
+Reveal the birthday message
+       ↓
+Play music or save the card as PNG
 ```
 
-| Step | Aksi |
-|:---:|---|
-| **1** | Masukkan **nama** dan **usia** penerima di form input |
-| **2** | Klik kunci 🔑 untuk membuka pintu dengan animasi |
-| **3** | Lihat badge medali dengan usia dan confetti 🎊 |
-| **4** | Klik tombol untuk membuka surat ucapan |
-| **5** | Nikmati musik latar yang diputar otomatis 🎵 |
+## 🎨 Visual Themes
 
----
+The application currently contains five themes. Each theme changes the accent, background, metallic badge, and door colors:
 
-## ✨ Fitur
+| Theme | Style |
+|---|---|
+| **Teal & Gold** | Teal background with warm gold accents |
+| **Purple Dream** | Purple gradient with bright pink/violet accents |
+| **Midnight Rose** | Dark blue palette with rose highlights |
+| **Forest Glow** | Deep green palette with lime/cyan accents |
+| **Sunset Blaze** | Indigo background with orange/coral accents |
 
-- 🎨 **5 Tema Warna Random** — Teal & Gold, Purple Dream, Midnight Rose, Forest Glow, Sunset Blaze
-- 🎵 **Musik Random** — 4 lagu siap putar dengan mini player bergaya Spotify (vinyl spin, progress bar, equalizer)
-- 🚪 **Animasi Pintu Interaktif** — Pintu terbuka dengan animasi smooth saat kunci diklik
-- 🏅 **Badge Medali** — Menampilkan usia dengan desain medali emas yang elegan
-- 🎊 **Confetti & Floating Emoji** — Hujan confetti berwarna-warni sesuai tema
-- 📝 **Surat Ucapan** — Pesan birthday dengan sentuhan Korea (생일 축하해!)
-- 🔊 **UI Sound Effects** — Efek suara kecil saat interaksi (Web Audio API)
-- 📸 **Download as Image** — Simpan kartu sebagai gambar PNG
-- ♿ **Accessible** — Keyboard navigation & ARIA labels
-- 📱 **Responsive** — Tampil sempurna di mobile & desktop
+A theme is selected randomly when the card is created.
 
----
+## 🎵 Background Music
 
-## 🎵 Playlist
+The current playlist contains four bundled audio files:
 
-| # | Lagu | Artis | Mulai dari |
-|:---:|---|---|:---:|
-| 1 | Monokrom | Tulus | 0:30 |
-| 2 | Just The Way You Are | Bruno Mars | 0:16 |
-| 3 | OMG | NewJeans | 0:45 |
-| 4 | APT | ROSÉ & Bruno Mars | 0:00 |
+| Track | Artist | Starting Position |
+|---|---|---:|
+| Monokrom | Tulus | 0:30 |
+| Just The Way You Are | Bruno Mars | 0:15 |
+| OMG | NewJeans | 0:40 |
+| APT | ROSÉ & Bruno Mars | 0:00 |
 
-> 🎶 Lagu dipilih secara **random** setiap kali kartu dibuat!
+The application randomly selects a track when a new card is generated. Music playback starts from the configured position after the interactive door is opened, subject to browser autoplay policies.
 
----
+> **Important:** The repository contains copies of commercially released music tracks. If you redistribute, deploy, or modify this project publicly, make sure you have the necessary rights or permissions for any bundled audio assets. The repository currently does not include a separate `LICENSE` file for the project or the audio files.
 
-## 🎨 Tema Warna
+## 🖼️ Saving the Card
 
-| Tema | Preview |
-|---|:---:|
-| **Teal & Gold** | 🟡🟠🟢 |
-| **Purple Dream** | 🟣💜💗 |
-| **Midnight Rose** | 🩷🌹🔵 |
-| **Forest Glow** | 🟢💚🩵 |
-| **Sunset Blaze** | 🟠🔴🔵 |
+After the birthday message is revealed, the **Save as Image** action captures the card using `html2canvas` and generates a PNG file named using the recipient's name.
 
----
+Because `html2canvas` is loaded from jsDelivr, an internet connection may be required for the image-export feature if the library has not already been cached by the browser.
 
-## 🚀 Cara Pakai
+## 🛠️ Tech Stack
 
-### Langsung Buka
-Cukup kunjungi link live demo atau buka file `index.html` di browser:
+| Technology | Purpose |
+|---|---|
+| HTML5 | Application structure and semantic markup |
+| CSS3 | Layout, responsive styling, themes, glassmorphism, and animations |
+| Vanilla JavaScript | Application logic, personalization, randomization, audio controls, and interactions |
+| Web Audio API | Short UI sound effects |
+| html2canvas 1.4.1 | Client-side PNG capture |
+| Google Fonts | Fredoka and Karla typefaces |
+
+There is **no package manager or build step**. The application is designed to run directly as a static website.
+
+## 📁 Project Structure
+
+```text
+birthday-gift/
+├── index.html          # Complete application: HTML, CSS, and JavaScript
+├── monokrom.mp3        # Bundled background track
+├── jtwya.mp3           # Bundled background track
+├── omg.mp3             # Bundled background track
+├── apt.mp3             # Bundled background track
+└── README.md           # Project documentation
+```
+
+## 🚀 Running Locally
+
+Clone the repository:
 
 ```bash
-# Clone repository
 git clone https://github.com/IchigoSky21/birthday-gift.git
-
-# Masuk ke folder
 cd birthday-gift
-
-# Buka di browser
-start index.html        # Windows
-open index.html         # macOS
-xdg-open index.html     # Linux
 ```
 
-### Menambah Lagu Baru
-Edit array `PLAYLIST` di dalam `index.html`:
+Then open `index.html` in a modern browser.
+
+For the most reliable behavior—especially when testing external CDN resources—serve the directory through a local HTTP server instead of relying on a `file://` URL.
+
+For example, with Python:
+
+```bash
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000` in your browser.
+
+## 🎵 Adding or Replacing Music
+
+The playlist is defined directly in `index.html`:
 
 ```javascript
 const PLAYLIST = [
   { file: 'monokrom.mp3', title: 'Monokrom', artist: 'Tulus', startAt: 30 },
-  { file: 'lagu-baru.mp3', title: 'Judul Lagu', artist: 'Artis', startAt: 0 },
-  // Tambahkan lagu lainnya di sini...
+  { file: 'your-song.mp3', title: 'Your Song', artist: 'Artist Name', startAt: 0 }
 ];
 ```
 
-> ⚠️ Letakkan file `.mp3` di folder yang sama dengan `index.html`
+Place the corresponding audio file next to `index.html`, then add it to the `PLAYLIST` array.
 
----
+For public redistribution, prefer music that you have permission to use or that is available under an appropriate license.
 
-## 📁 Struktur File
+## ♿ Accessibility & Compatibility
 
-```text
-birthday-gift/
-├── index.html          # Aplikasi utama (HTML + CSS + JS)
-├── monokrom.mp3        # 🎵 Tulus - Monokrom
-├── jtwya.mp3           # 🎵 Bruno Mars - Just The Way You Are
-├── omg.mp3             # 🎵 NewJeans - OMG
-├── apt.mp3             # 🎵 ROSÉ & Bruno Mars - APT
-└── README.md           # Dokumentasi
-```
+The interface includes keyboard interactions for key and music controls, ARIA labels for relevant interactive elements, and responsive layouts for smaller screens.
 
----
+The project targets modern desktop and mobile browsers with support for standard HTML5, CSS3, JavaScript, Web Audio API, and client-side canvas rendering.
 
-## 🛠️ Tech Stack
+## 📌 Current Limitations
 
-- **HTML5**  Struktur & semantik
-- **CSS3**  Styling, animasi, glassmorphism, backdrop-filter
-- **Vanilla JavaScript**  Logika, Web Audio API, DOM manipulation
-- **Google Fonts**  Fredoka & Karla
-- **html2canvas**  Screenshot / download kartu sebagai gambar (CDN)
+- The application is intentionally a static, client-side experience; there is no backend, database, or user account system.
+- Background music depends on the bundled audio assets and browser media policies.
+- The PNG export depends on the `html2canvas` CDN resource being available.
+- The project currently bundles copyrighted commercial music tracks; redistribution rights should be verified before public reuse.
+- The generated birthday message is fixed in the application logic apart from the recipient's name and age.
+- The project does not currently include an open-source license file.
 
-> 🎯 **Zero dependencies**  Tidak perlu install apapun. Cukup buka di browser!
+## 🤝 Contributing
 
----
+Contributions and improvements are welcome.
 
-## 📱 Browser Support
+1. Fork the repository.
+2. Create a feature branch:
 
-| Browser | Status |
-|---|:---:|
-| Chrome 90+ | ✅ Fully Supported |
-| Firefox 90+ | ✅ Fully Supported |
-| Safari 15+ | ✅ Fully Supported |
-| Edge 90+ | ✅ Fully Supported |
-| Mobile Chrome | ✅ Fully Supported |
-| Mobile Safari | ✅ Fully Supported |
+   ```bash
+   git checkout -b feature/your-feature
+   ```
 
----
+3. Make and test your changes.
+4. Commit your changes.
+5. Push the branch and open a pull request.
 
-## 🤝 Kontribusi
+When contributing, please keep the project lightweight and preserve its static, dependency-free architecture where practical.
 
-Kontribusi sangat diterima! Silakan:
-1. **Fork** repository ini
-2. Buat **branch** baru (`git checkout -b fitur-baru`)
-3. **Commit** perubahan (`git commit -m 'Tambah fitur baru'`)
-4. **Push** ke branch (`git push origin fitur-baru`)
-5. Buat **Pull Request**
+## 📄 License
 
----
-
-## 📄 Lisensi
-
-Project ini dibuat dengan ❤️ untuk tujuan personal. Silakan gunakan dan modifikasi sesuai kebutuhan.
+No `LICENSE` file is currently included in this repository. Until a license is explicitly added, do not assume that the source code or bundled media is freely licensed for redistribution.
 
 ---
 
@@ -173,6 +180,6 @@ Project ini dibuat dengan ❤️ untuk tujuan personal. Silakan gunakan dan modi
 
 **Made with ❤️ by [IchigoSky21](https://github.com/IchigoSky21)**
 
-🎂 *Selamat ulang tahun untuk siapapun yang menerima kartu ini!* 🎂
+🎂 *A small interactive way to make someone's birthday a little more memorable.* 🎂
 
 </div>
