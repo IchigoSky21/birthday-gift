@@ -20,15 +20,13 @@
     --door-top: #12484A;
     --door-bot: #0A3536;
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0; width: 100%; height: 100%;
-    overflow-x: hidden;
     font-family: 'Karla', sans-serif;
     background: var(--bg-deep);
     color: var(--cream);
   }
-  button, [role="button"] { touch-action: manipulation; }
   .wrapper {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -265,10 +263,6 @@
   }
   .medal-inner { width: 128px; height: 128px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 4px 10px rgba(0,0,0,0.25); }
   .medal-num { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 3rem; color: var(--cream); }
-  .medal-ribbon { position: absolute; top: 148px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: -1; }
-  .ribbon-tail { width: 26px; height: 60px; clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%); }
-  .ribbon-tail.left  { transform: rotate(-8deg); background: var(--bg); }
-  .ribbon-tail.right { transform: rotate(8deg); background: var(--bg-deep); }
   .flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 320px; margin: 84px auto 26px; position: relative; min-height: 16px; }
   .flag { width: 12px; height: 14px; background: #4a3350; clip-path: polygon(0 0, 100% 0, 50% 100%); transition: background 0.35s ease, transform 0.35s ease; }
   .flag.lit { transform: translateY(2px); filter: drop-shadow(0 2px 4px rgba(255,255,255,0.4)); }
@@ -375,54 +369,9 @@
     height: 1em;
   }
   .action-feedback.show { opacity: 1; }
-  /* ========== EXPORT CARD (hidden, fixed-size — used only for the downloaded image) ========== */
-  /* Kept off-screen (not display:none) so html2canvas can still render it, */
-  /* and given fixed 1080x1080 px so the downloaded photo looks the same */
-  /* whether it's generated on a phone or a desktop browser.              */
-  .export-card {
-    position: fixed;
-    top: 0; left: -99999px;
-    width: 1080px; height: 1080px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 90px 100px;
-    background: linear-gradient(160deg, var(--bg) 0%, var(--bg-deep) 100%);
-    color: var(--cream);
-    font-family: 'Karla', sans-serif;
-    text-align: center;
-    overflow: hidden;
-  }
-  .export-eyebrow {
-    font-family: 'Fredoka', sans-serif; font-weight: 600;
-    letter-spacing: 0.14em; font-size: 26px; color: var(--accent);
-    margin: 0 0 12px;
-  }
-  .export-title {
-    font-family: 'Fredoka', sans-serif; font-weight: 700;
-    font-size: 54px; line-height: 1.15; margin: 0 0 44px; color: var(--cream);
-  }
-  .export-medal {
-    position: relative; width: 260px; height: 260px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--metal-light), var(--metal) 65%, #B9822F 100%);
-    box-shadow: 0 14px 30px rgba(0,0,0,0.35), inset 0 0 0 8px rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .export-medal-inner {
-    width: 200px; height: 200px; border-radius: 50%; background: var(--accent2);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: inset 0 6px 14px rgba(0,0,0,0.25);
-  }
-  .export-medal-inner span { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 92px; color: var(--cream); }
-  .export-ribbon { position: absolute; top: 229px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: -1; }
-  .export-ribbon-tail { width: 40px; height: 93px; clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%); }
-  .export-ribbon-tail.left  { transform: rotate(-8deg); background: var(--bg); }
-  .export-ribbon-tail.right { transform: rotate(8deg); background: var(--bg-deep); }
-  .export-flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 640px; margin: 130px auto 36px; }
-  .export-flag { width: 20px; height: 24px; clip-path: polygon(0 0, 100% 0, 50% 100%); }
-  .export-message { font-size: 30px; line-height: 1.6; max-width: 780px; margin: 0 0 20px; }
-  .export-signoff { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 36px; color: var(--accent2); margin-top: 6px; }
   /* ========== KEYBOARD FOCUS ========== */
   .key:focus-visible,
-  .yt-wrap:focus-visible,
+  .vinyl-wrap:focus-visible,
   .progress-bar:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
@@ -471,10 +420,6 @@
         <h2 class="badge-title" id="txtBadgeTitle"></h2>
         <div class="medal">
           <div class="medal-inner"><span class="medal-num" id="txtMedalNum"></span></div>
-          <div class="medal-ribbon">
-            <div class="ribbon-tail left"></div>
-            <div class="ribbon-tail right"></div>
-          </div>
         </div>
         <div class="flags" id="flags"></div>
         <button class="pull-btn" id="pullBtn">Click for wishes and hopes 🎊</button>
@@ -487,9 +432,9 @@
           <p class="signoff" id="txtSignoff"></p>
         </div>
         <div class="mini-player" id="miniPlayer">
-          <div class="yt-wrap" id="ytWrap" role="button" tabindex="0" aria-label="Putar atau jeda musik">
-            <div id="ytPlayerContainer"></div>
-            <div class="yt-overlay">
+          <div class="vinyl-wrap" id="vinylWrap" role="button" tabindex="0" aria-label="Putar atau jeda musik">
+            <div class="vinyl" id="vinyl"></div>
+            <div class="vinyl-overlay">
               <svg id="iconPlay" viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,4 20,12 8,20"/></svg>
               <svg id="iconPause" viewBox="0 0 24 24" style="display:none" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
             </div>
@@ -524,22 +469,7 @@
     </div>
   </div>
 </div>
-<!-- EXPORT CARD: not meant to be seen on page, only captured for the downloaded photo -->
-<div class="export-card" id="exportCard" aria-hidden="true">
-  <p class="export-eyebrow" id="exportEyebrow"></p>
-  <h2 class="export-title" id="exportTitle"></h2>
-  <div class="export-medal">
-    <div class="export-medal-inner"><span id="exportMedalNum"></span></div>
-    <div class="export-ribbon">
-      <div class="export-ribbon-tail left"></div>
-      <div class="export-ribbon-tail right"></div>
-    </div>
-  </div>
-  <div class="export-flags" id="exportFlags"></div>
-  <p class="export-message" id="exportMessage"></p>
-  <p class="export-signoff" id="exportSignoff"></p>
-</div>
-<script src="https://www.youtube.com/iframe_api"></script>
+<audio id="bgMusic" loop></audio>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // ============================================
@@ -555,13 +485,11 @@ const THEMES = [
 // ============================================
 // PLAYLIST — Tambah/hapus lagu di sini
 // ============================================
-// videoId = bagian 11 karakter setelah "v=" di URL YouTube lagu resminya.
-// Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> videoId: 'dQw4w9WgXcQ'
 const PLAYLIST = [
-  { videoId: 'GANTI_DENGAN_ID_VIDEO_1', title: 'Monokrom',              artist: 'Tulus',              startAt: 30 },
-  { videoId: 'GANTI_DENGAN_ID_VIDEO_2', title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 15 },
-  { videoId: 'GANTI_DENGAN_ID_VIDEO_3', title: 'OMG',                   artist: 'NewJeans',           startAt: 40 },
-  { videoId: 'GANTI_DENGAN_ID_VIDEO_4', title: 'APT',                   artist: 'ROSÉ & Bruno Mars',  startAt: 0  }
+  { file: 'monokrom.mp3',  title: 'Monokrom',              artist: 'Tulus',              startAt: 30 },
+  { file: 'jtwya.mp3',     title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 15 },
+  { file: 'omg.mp3',       title: 'OMG',                   artist: 'NewJeans',           startAt: 40 },
+  { file: 'apt.mp3',       title: 'APT',                   artist: 'ROSÉ & Bruno Mars',  startAt: 0  }
 ];
 let currentTheme = null;
 let chosenSong = null;
@@ -609,7 +537,7 @@ THEMES.forEach(t => {
 // DRIFTING ELEMENTS
 // ============================================
 const driftContainer = document.getElementById('driftKeys');
-const driftEmojis = ['🔑','🗝️'];
+const driftEmojis = ['🎈','🎂','💖','🎁','✨'];
 for (let i = 0; i < 15; i++) {
   const k = document.createElement('div');
   k.className = 'drift-key';
@@ -642,17 +570,11 @@ function burstConfetti(count) {
   }
 }
 // ============================================
-// MUSIC PLAYER — via YouTube IFrame Player API
-// Lagu benar-benar di-stream dari YouTube (bukan file yang di-hosting
-// sendiri), jadi lisensinya ditanggung YouTube. Player-nya sengaja
-// tetap terlihat (bukan disembunyikan total) karena itu salah satu
-// syarat pemakaian embed YouTube.
+// MUSIC PLAYER
 // ============================================
-let ytPlayer = null;
-let ytReady = false;
-let ytProgressTimer = null;
-let pendingPlayRequest = false;
-const ytWrap = document.getElementById('ytWrap');
+const bgMusic = document.getElementById('bgMusic');
+const vinyl = document.getElementById('vinyl');
+const vinylWrap = document.getElementById('vinylWrap');
 const iconPlay = document.getElementById('iconPlay');
 const iconPause = document.getElementById('iconPause');
 const progressFill = document.getElementById('progressFill');
@@ -660,89 +582,53 @@ const progressBar = document.getElementById('progressBar');
 const timeCurrent = document.getElementById('timeCurrent');
 const timeTotal = document.getElementById('timeTotal');
 const eqBars = document.getElementById('eqBars');
-function updatePlayerUI(playing) {
+function updatePlayerUI() {
+  const playing = !bgMusic.paused;
   iconPlay.style.display = playing ? 'none' : '';
   iconPause.style.display = playing ? '' : 'none';
+  vinyl.classList.toggle('spinning', playing);
   eqBars.classList.toggle('paused', !playing);
-}
-function updateProgress() {
-  if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
-  const dur = ytPlayer.getDuration();
-  const cur = ytPlayer.getCurrentTime();
-  if (dur) {
-    progressFill.style.width = (cur / dur * 100) + '%';
-    timeCurrent.textContent = formatTime(cur);
-    timeTotal.textContent = formatTime(dur);
+  if (bgMusic.duration) {
+    progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
+    timeCurrent.textContent = formatTime(bgMusic.currentTime);
+    timeTotal.textContent = formatTime(bgMusic.duration);
   }
 }
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('ytPlayerContainer', {
-    height: '100%',
-    width: '100%',
-    playerVars: {
-      controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3, playsinline: 1,
-      origin: window.location.origin
-    },
-    events: {
-      onReady: () => {
-        ytReady = true;
-        if (pendingPlayRequest) { pendingPlayRequest = false; tryPlayMusic(); }
-      },
-      onStateChange: (e) => {
-        const playing = e.data === YT.PlayerState.PLAYING;
-        updatePlayerUI(playing);
-        clearInterval(ytProgressTimer);
-        if (playing) ytProgressTimer = setInterval(updateProgress, 400);
-      },
-      // Kalau lagunya nggak bisa diputar (video owner nonaktifkan embed, video
-      // dihapus/di-private-kan, dsb), tampilkan alasannya di halaman — biar
-      // kelihatan jelas kenapa, bukan cuma diam tanpa suara.
-      onError: (e) => {
-        let reason = 'Lagu gagal diputar.';
-        if (e.data === 101 || e.data === 150) reason = 'Pemilik video menonaktifkan embed di luar YouTube.';
-        else if (e.data === 100) reason = 'Video tidak ditemukan / sudah dihapus / di-private-kan.';
-        else if (e.data === 2) reason = 'Video ID tidak valid — cek lagi ID-nya.';
-        document.getElementById('txtArtistName').textContent = reason;
-        console.warn('[YouTube Player Error]', e.data, reason, '— videoId:', chosenSong && chosenSong.videoId);
-      }
-    }
-  });
-}
-window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-ytWrap.addEventListener('click', () => {
-  if (!ytReady) return;
-  const state = ytPlayer.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+bgMusic.addEventListener('timeupdate', updatePlayerUI);
+bgMusic.addEventListener('loadedmetadata', () => { timeTotal.textContent = formatTime(bgMusic.duration); });
+bgMusic.addEventListener('play', updatePlayerUI);
+bgMusic.addEventListener('pause', updatePlayerUI);
+vinylWrap.addEventListener('click', () => {
+  if (bgMusic.paused) {
+    bgMusic.volume = 0.2;
+    bgMusic.play().catch(() => {});
+  } else {
+    bgMusic.pause();
+  }
 });
-ytWrap.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ytWrap.click(); }
+vinylWrap.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vinylWrap.click(); }
 });
 progressBar.addEventListener('click', (e) => {
-  if (!ytReady) return;
-  const dur = ytPlayer.getDuration();
-  if (!dur) return;
+  if (!bgMusic.duration) return;
   const rect = progressBar.getBoundingClientRect();
-  ytPlayer.seekTo(((e.clientX - rect.left) / rect.width) * dur, true);
+  bgMusic.currentTime = ((e.clientX - rect.left) / rect.width) * bgMusic.duration;
 });
 progressBar.addEventListener('keydown', (e) => {
-  if (!ytReady) return;
-  const dur = ytPlayer.getDuration();
-  const cur = ytPlayer.getCurrentTime();
-  if (e.key === 'ArrowRight') { ytPlayer.seekTo(Math.min(dur, cur + 5), true); }
-  if (e.key === 'ArrowLeft')  { ytPlayer.seekTo(Math.max(0, cur - 5), true); }
+  if (!bgMusic.duration) return;
+  if (e.key === 'ArrowRight') { bgMusic.currentTime = Math.min(bgMusic.duration, bgMusic.currentTime + 5); }
+  if (e.key === 'ArrowLeft')  { bgMusic.currentTime = Math.max(0, bgMusic.currentTime - 5); }
 });
 function setupMusic() {
   chosenSong = PLAYLIST[Math.floor(Math.random() * PLAYLIST.length)];
+  bgMusic.src = chosenSong.file;
   document.getElementById('txtSongName').textContent = chosenSong.title;
   document.getElementById('txtArtistName').textContent = chosenSong.artist;
 }
 function tryPlayMusic() {
-  if (!chosenSong) return;
-  if (!ytReady) { pendingPlayRequest = true; return; }
-  ytPlayer.loadVideoById({ videoId: chosenSong.videoId, startSeconds: chosenSong.startAt || 0 });
-  ytPlayer.unMute();
-  ytPlayer.setVolume(30);
-  ytPlayer.playVideo();
+  bgMusic.volume = 0.3;
+  bgMusic.currentTime = chosenSong ? chosenSong.startAt : 0;
+  bgMusic.play().then(() => updatePlayerUI()).catch(() => {});
 }
 // ============================================
 // TINY UI SOUNDS (Web Audio, no extra audio files needed)
@@ -807,21 +693,6 @@ function applyCard(name, age) {
     flag.dataset.color = flagColors[i % flagColors.length];
     flagsContainer.appendChild(flag);
   }
-  // Fill the export card (separate, condensed — this is what gets downloaded)
-  document.getElementById('exportEyebrow').textContent = 'HAPPY ' + getOrdinalSuffix(userAge).toUpperCase() + ' BIRTHDAY';
-  document.getElementById('exportTitle').textContent = 'For ' + userName + ' 💛';
-  document.getElementById('exportMedalNum').textContent = userAge;
-  document.getElementById('exportMessage').textContent = 'Wishing you so much love, laughter, and good fortune on your special day.';
-  document.getElementById('exportSignoff').textContent = 'Happy birthday, ' + userName + '! 🎂💛';
-  const exportFlagsContainer = document.getElementById('exportFlags');
-  exportFlagsContainer.innerHTML = '';
-  const exportFlagCount = Math.min(userAge, 30);
-  for (let i = 0; i < exportFlagCount; i++) {
-    const flag = document.createElement('div');
-    flag.className = 'export-flag';
-    flag.style.background = flagColors[i % flagColors.length];
-    exportFlagsContainer.appendChild(flag);
-  }
   // Reset states
   opened = false;
   pulled = false;
@@ -829,12 +700,9 @@ function applyCard(name, age) {
   document.getElementById('note').classList.remove('revealed');
   pullBtn.disabled = false;
   pullBtn.textContent = 'Click for wishes and hopes 🎊';
-  if (ytReady && typeof ytPlayer.stopVideo === 'function') { ytPlayer.stopVideo(); }
-  clearInterval(ytProgressTimer);
-  progressFill.style.width = '0%';
-  timeCurrent.textContent = '0:00';
-  timeTotal.textContent = '0:00';
-  updatePlayerUI(false);
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+  updatePlayerUI();
 }
 createBtn.addEventListener('click', () => {
   const nameVal = document.getElementById('inputName').value.trim();
@@ -896,14 +764,12 @@ downloadBtn.addEventListener('click', async () => {
   const originalLabel = downloadBtn.textContent;
   downloadBtn.textContent = 'Menyiapkan gambar...';
   try {
-    const target = document.getElementById('exportCard');
+    const target = document.querySelector('.badge-col');
+    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-deep').trim() || '#0A4F50';
     const canvas = await html2canvas(target, {
+      backgroundColor: bgColor,
       scale: 2,
-      useCORS: true,
-      width: 1080,
-      height: 1080,
-      windowWidth: 1080,
-      windowHeight: 1080
+      useCORS: true
     });
     const link = document.createElement('a');
     const safeName = (userName || 'kartu').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
