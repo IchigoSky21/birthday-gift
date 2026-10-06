@@ -309,28 +309,15 @@
     margin: 22px 0 30px;
     max-width: 320px; width: 100%;
   }
-  .vinyl-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; cursor: pointer; }
-  .vinyl {
-    width: 52px; height: 52px; border-radius: 50%;
-    background:
-      radial-gradient(circle at 50% 50%, var(--ink) 8px, transparent 8px),
-      radial-gradient(circle at 50% 50%, var(--metal-light) 10px, transparent 10px),
-      repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 4px),
-      conic-gradient(from 0deg, #1a1a2e, #2d2d44, #1a1a2e, #2d2d44, #1a1a2e);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.08);
-    animation: vinylSpin 3s linear infinite;
-    animation-play-state: paused;
-  }
-  .vinyl.spinning { animation-play-state: running; }
-  @keyframes vinylSpin { to { transform: rotate(360deg); } }
-  .vinyl-overlay {
-    position: absolute; inset: 0; border-radius: 50%;
+  .yt-wrap { position: relative; width: 96px; height: 60px; flex-shrink: 0; cursor: pointer; border-radius: 10px; overflow: hidden; background: #000; box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+  .yt-wrap iframe { width: 100% !important; height: 100% !important; display: block; pointer-events: none; }
+  .yt-overlay {
+    position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0); transition: background 0.2s ease; cursor: pointer;
+    background: rgba(0,0,0,0.25); transition: background 0.2s ease; cursor: pointer;
   }
-  .vinyl-wrap:hover .vinyl-overlay { background: rgba(0,0,0,0.35); }
-  .vinyl-overlay svg { width: 20px; height: 20px; fill: var(--cream); opacity: 0; transition: opacity 0.2s ease; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
-  .vinyl-wrap:hover .vinyl-overlay svg { opacity: 1; }
+  .yt-wrap:hover .yt-overlay { background: rgba(0,0,0,0.45); }
+  .yt-overlay svg { width: 22px; height: 22px; fill: var(--cream); filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
   .player-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
   .player-song { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 0.82rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
   .player-artist { font-size: 0.7rem; color: rgba(255,246,229,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
@@ -422,7 +409,7 @@
   .export-signoff { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 36px; color: var(--accent2); margin-top: 6px; }
   /* ========== KEYBOARD FOCUS ========== */
   .key:focus-visible,
-  .vinyl-wrap:focus-visible,
+  .yt-wrap:focus-visible,
   .progress-bar:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
@@ -487,9 +474,9 @@
           <p class="signoff" id="txtSignoff"></p>
         </div>
         <div class="mini-player" id="miniPlayer">
-          <div class="vinyl-wrap" id="vinylWrap" role="button" tabindex="0" aria-label="Putar atau jeda musik">
-            <div class="vinyl" id="vinyl"></div>
-            <div class="vinyl-overlay">
+          <div class="yt-wrap" id="ytWrap" role="button" tabindex="0" aria-label="Putar atau jeda musik">
+            <div id="ytPlayerContainer"></div>
+            <div class="yt-overlay">
               <svg id="iconPlay" viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,4 20,12 8,20"/></svg>
               <svg id="iconPause" viewBox="0 0 24 24" style="display:none" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
             </div>
@@ -539,7 +526,7 @@
   <p class="export-message" id="exportMessage"></p>
   <p class="export-signoff" id="exportSignoff"></p>
 </div>
-<audio id="bgMusic" loop preload="auto"></audio>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // ============================================
@@ -555,11 +542,13 @@ const THEMES = [
 // ============================================
 // PLAYLIST — Tambah/hapus lagu di sini
 // ============================================
+// videoId = bagian 11 karakter setelah "v=" di URL YouTube lagu resminya.
+// Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> videoId: 'dQw4w9WgXcQ'
 const PLAYLIST = [
-  { file: 'monokrom.mp3',  title: 'Monokrom',              artist: 'Tulus',              startAt: 30 },
-  { file: 'jtwya.mp3',     title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 15 },
-  { file: 'omg.mp3',       title: 'OMG',                   artist: 'NewJeans',           startAt: 40 },
-  { file: 'apt.mp3',       title: 'APT',                   artist: 'ROSÉ & Bruno Mars',  startAt: 0  }
+  { videoId: 'GANTI_DENGAN_ID_VIDEO_1', title: 'Monokrom',              artist: 'Tulus',              startAt: 30 },
+  { videoId: 'GANTI_DENGAN_ID_VIDEO_2', title: 'Just The Way You Are',  artist: 'Bruno Mars',         startAt: 15 },
+  { videoId: 'GANTI_DENGAN_ID_VIDEO_3', title: 'OMG',                   artist: 'NewJeans',           startAt: 40 },
+  { videoId: 'GANTI_DENGAN_ID_VIDEO_4', title: 'APT',                   artist: 'ROSÉ & Bruno Mars',  startAt: 0  }
 ];
 let currentTheme = null;
 let chosenSong = null;
@@ -640,11 +629,17 @@ function burstConfetti(count) {
   }
 }
 // ============================================
-// MUSIC PLAYER
+// MUSIC PLAYER — via YouTube IFrame Player API
+// Lagu benar-benar di-stream dari YouTube (bukan file yang di-hosting
+// sendiri), jadi lisensinya ditanggung YouTube. Player-nya sengaja
+// tetap terlihat (bukan disembunyikan total) karena itu salah satu
+// syarat pemakaian embed YouTube.
 // ============================================
-const bgMusic = document.getElementById('bgMusic');
-const vinyl = document.getElementById('vinyl');
-const vinylWrap = document.getElementById('vinylWrap');
+let ytPlayer = null;
+let ytReady = false;
+let ytProgressTimer = null;
+let pendingPlayRequest = false;
+const ytWrap = document.getElementById('ytWrap');
 const iconPlay = document.getElementById('iconPlay');
 const iconPause = document.getElementById('iconPause');
 const progressFill = document.getElementById('progressFill');
@@ -652,53 +647,74 @@ const progressBar = document.getElementById('progressBar');
 const timeCurrent = document.getElementById('timeCurrent');
 const timeTotal = document.getElementById('timeTotal');
 const eqBars = document.getElementById('eqBars');
-function updatePlayerUI() {
-  const playing = !bgMusic.paused;
+function updatePlayerUI(playing) {
   iconPlay.style.display = playing ? 'none' : '';
   iconPause.style.display = playing ? '' : 'none';
-  vinyl.classList.toggle('spinning', playing);
   eqBars.classList.toggle('paused', !playing);
-  if (bgMusic.duration) {
-    progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
-    timeCurrent.textContent = formatTime(bgMusic.currentTime);
-    timeTotal.textContent = formatTime(bgMusic.duration);
+}
+function updateProgress() {
+  if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+  const dur = ytPlayer.getDuration();
+  const cur = ytPlayer.getCurrentTime();
+  if (dur) {
+    progressFill.style.width = (cur / dur * 100) + '%';
+    timeCurrent.textContent = formatTime(cur);
+    timeTotal.textContent = formatTime(dur);
   }
 }
-bgMusic.addEventListener('timeupdate', updatePlayerUI);
-bgMusic.addEventListener('loadedmetadata', () => { timeTotal.textContent = formatTime(bgMusic.duration); });
-bgMusic.addEventListener('play', updatePlayerUI);
-bgMusic.addEventListener('pause', updatePlayerUI);
-vinylWrap.addEventListener('click', () => {
-  if (bgMusic.paused) {
-    bgMusic.volume = 0.2;
-    bgMusic.play().catch(() => {});
-  } else {
-    bgMusic.pause();
-  }
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('ytPlayerContainer', {
+    height: '100%',
+    width: '100%',
+    playerVars: { controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3, playsinline: 1 },
+    events: {
+      onReady: () => {
+        ytReady = true;
+        if (pendingPlayRequest) { pendingPlayRequest = false; tryPlayMusic(); }
+      },
+      onStateChange: (e) => {
+        const playing = e.data === YT.PlayerState.PLAYING;
+        updatePlayerUI(playing);
+        clearInterval(ytProgressTimer);
+        if (playing) ytProgressTimer = setInterval(updateProgress, 400);
+      }
+    }
+  });
+}
+window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+ytWrap.addEventListener('click', () => {
+  if (!ytReady) return;
+  const state = ytPlayer.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
 });
-vinylWrap.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vinylWrap.click(); }
+ytWrap.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ytWrap.click(); }
 });
 progressBar.addEventListener('click', (e) => {
-  if (!bgMusic.duration) return;
+  if (!ytReady) return;
+  const dur = ytPlayer.getDuration();
+  if (!dur) return;
   const rect = progressBar.getBoundingClientRect();
-  bgMusic.currentTime = ((e.clientX - rect.left) / rect.width) * bgMusic.duration;
+  ytPlayer.seekTo(((e.clientX - rect.left) / rect.width) * dur, true);
 });
 progressBar.addEventListener('keydown', (e) => {
-  if (!bgMusic.duration) return;
-  if (e.key === 'ArrowRight') { bgMusic.currentTime = Math.min(bgMusic.duration, bgMusic.currentTime + 5); }
-  if (e.key === 'ArrowLeft')  { bgMusic.currentTime = Math.max(0, bgMusic.currentTime - 5); }
+  if (!ytReady) return;
+  const dur = ytPlayer.getDuration();
+  const cur = ytPlayer.getCurrentTime();
+  if (e.key === 'ArrowRight') { ytPlayer.seekTo(Math.min(dur, cur + 5), true); }
+  if (e.key === 'ArrowLeft')  { ytPlayer.seekTo(Math.max(0, cur - 5), true); }
 });
 function setupMusic() {
   chosenSong = PLAYLIST[Math.floor(Math.random() * PLAYLIST.length)];
-  bgMusic.src = chosenSong.file;
   document.getElementById('txtSongName').textContent = chosenSong.title;
   document.getElementById('txtArtistName').textContent = chosenSong.artist;
 }
 function tryPlayMusic() {
-  bgMusic.volume = 0.3;
-  bgMusic.currentTime = chosenSong ? chosenSong.startAt : 0;
-  bgMusic.play().then(() => updatePlayerUI()).catch(() => {});
+  if (!chosenSong) return;
+  if (!ytReady) { pendingPlayRequest = true; return; }
+  ytPlayer.loadVideoById({ videoId: chosenSong.videoId, startSeconds: chosenSong.startAt || 0 });
+  ytPlayer.setVolume(30);
+  ytPlayer.playVideo();
 }
 // ============================================
 // TINY UI SOUNDS (Web Audio, no extra audio files needed)
@@ -785,9 +801,12 @@ function applyCard(name, age) {
   document.getElementById('note').classList.remove('revealed');
   pullBtn.disabled = false;
   pullBtn.textContent = 'Click for wishes and hopes 🎊';
-  bgMusic.pause();
-  bgMusic.currentTime = 0;
-  updatePlayerUI();
+  if (ytReady && typeof ytPlayer.stopVideo === 'function') { ytPlayer.stopVideo(); }
+  clearInterval(ytProgressTimer);
+  progressFill.style.width = '0%';
+  timeCurrent.textContent = '0:00';
+  timeTotal.textContent = '0:00';
+  updatePlayerUI(false);
 }
 createBtn.addEventListener('click', () => {
   const nameVal = document.getElementById('inputName').value.trim();
