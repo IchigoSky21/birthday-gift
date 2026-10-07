@@ -20,13 +20,15 @@
     --door-top: #12484A;
     --door-bot: #0A3536;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; padding: 0; width: 100%; height: 100%;
+    overflow-x: hidden;
     font-family: 'Karla', sans-serif;
     background: var(--bg-deep);
     color: var(--cream);
   }
+  button, [role="button"] { touch-action: manipulation; }
   .wrapper {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -263,6 +265,10 @@
   }
   .medal-inner { width: 128px; height: 128px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 4px 10px rgba(0,0,0,0.25); }
   .medal-num { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 3rem; color: var(--cream); }
+  .medal-ribbon { position: absolute; top: 148px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: -1; }
+  .ribbon-tail { width: 26px; height: 60px; clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%); }
+  .ribbon-tail.left  { transform: rotate(-8deg); background: var(--bg); }
+  .ribbon-tail.right { transform: rotate(8deg); background: var(--bg-deep); }
   .flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 320px; margin: 84px auto 26px; position: relative; min-height: 16px; }
   .flag { width: 12px; height: 14px; background: #4a3350; clip-path: polygon(0 0, 100% 0, 50% 100%); transition: background 0.35s ease, transform 0.35s ease; }
   .flag.lit { transform: translateY(2px); filter: drop-shadow(0 2px 4px rgba(255,255,255,0.4)); }
@@ -350,17 +356,21 @@
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
     font-size: 0.85rem;
-    color: var(--cream);
-    background: rgba(255,246,229,0.1);
-    border: 1px solid rgba(255,246,229,0.25);
-    padding: 10px 20px;
+    color: var(--ink);
+    background: var(--accent2);
+    border: none;
+    padding: 11px 22px;
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .action-btn:hover { background: rgba(255,246,229,0.18); border-color: var(--accent); }
-  .action-btn:active { transform: scale(0.97); }
-  .action-btn:disabled { opacity: 0.6; cursor: default; }
+  .action-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .action-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  .action-btn:disabled { opacity: 0.7; cursor: default; transform: none; box-shadow: 0 5px 0 rgba(0,0,0,0.2); }
   .action-feedback {
     font-size: 0.78rem;
     color: var(--accent);
@@ -369,6 +379,51 @@
     height: 1em;
   }
   .action-feedback.show { opacity: 1; }
+  /* ========== EXPORT CARD (hidden, fixed-size — used only for the downloaded image) ========== */
+  /* Kept off-screen (not display:none) so html2canvas can still render it, */
+  /* and given fixed 1080x1080 px so the downloaded photo looks the same */
+  /* whether it's generated on a phone or a desktop browser.              */
+  .export-card {
+    position: fixed;
+    top: 0; left: -99999px;
+    width: 1080px; height: 1080px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 90px 100px;
+    background: linear-gradient(160deg, var(--bg) 0%, var(--bg-deep) 100%);
+    color: var(--cream);
+    font-family: 'Karla', sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
+  .export-eyebrow {
+    font-family: 'Fredoka', sans-serif; font-weight: 600;
+    letter-spacing: 0.14em; font-size: 26px; color: var(--accent);
+    margin: 0 0 12px;
+  }
+  .export-title {
+    font-family: 'Fredoka', sans-serif; font-weight: 700;
+    font-size: 54px; line-height: 1.15; margin: 0 0 44px; color: var(--cream);
+  }
+  .export-medal {
+    position: relative; width: 260px; height: 260px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--metal-light), var(--metal) 65%, #B9822F 100%);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.35), inset 0 0 0 8px rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .export-medal-inner {
+    width: 200px; height: 200px; border-radius: 50%; background: var(--accent2);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 6px 14px rgba(0,0,0,0.25);
+  }
+  .export-medal-inner span { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 92px; color: var(--cream); }
+  .export-ribbon { position: absolute; top: 229px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: -1; }
+  .export-ribbon-tail { width: 40px; height: 93px; clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%); }
+  .export-ribbon-tail.left  { transform: rotate(-8deg); background: var(--bg); }
+  .export-ribbon-tail.right { transform: rotate(8deg); background: var(--bg-deep); }
+  .export-flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 640px; margin: 130px auto 36px; }
+  .export-flag { width: 20px; height: 24px; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+  .export-message { font-size: 30px; line-height: 1.6; max-width: 780px; margin: 0 0 20px; }
+  .export-signoff { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 36px; color: var(--accent2); margin-top: 6px; }
   /* ========== KEYBOARD FOCUS ========== */
   .key:focus-visible,
   .vinyl-wrap:focus-visible,
@@ -420,6 +475,10 @@
         <h2 class="badge-title" id="txtBadgeTitle"></h2>
         <div class="medal">
           <div class="medal-inner"><span class="medal-num" id="txtMedalNum"></span></div>
+          <div class="medal-ribbon">
+            <div class="ribbon-tail left"></div>
+            <div class="ribbon-tail right"></div>
+          </div>
         </div>
         <div class="flags" id="flags"></div>
         <button class="pull-btn" id="pullBtn">Click for wishes and hopes 🎊</button>
@@ -462,14 +521,32 @@
           </div>
         </div>
         <div class="action-row">
-          <button class="action-btn" id="downloadBtn">📸 Save as photo</button>
+          <button class="action-btn" id="downloadBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0l-4.5-4.5M12 14l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="downloadBtnLabel">Save as photo</span>
+          </button>
           <span class="action-feedback" id="downloadFeedback">Success! Check your file ✅</span>
         </div>
       </div>
     </div>
   </div>
 </div>
-<audio id="bgMusic" loop></audio>
+<!-- EXPORT CARD: not meant to be seen on page, only captured for the downloaded photo -->
+<div class="export-card" id="exportCard" aria-hidden="true">
+  <p class="export-eyebrow" id="exportEyebrow"></p>
+  <h2 class="export-title" id="exportTitle"></h2>
+  <div class="export-medal">
+    <div class="export-medal-inner"><span id="exportMedalNum"></span></div>
+    <div class="export-ribbon">
+      <div class="export-ribbon-tail left"></div>
+      <div class="export-ribbon-tail right"></div>
+    </div>
+  </div>
+  <div class="export-flags" id="exportFlags"></div>
+  <p class="export-message" id="exportMessage"></p>
+  <p class="export-signoff" id="exportSignoff"></p>
+</div>
+<audio id="bgMusic" loop preload="auto"></audio>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // ============================================
@@ -537,7 +614,7 @@ THEMES.forEach(t => {
 // DRIFTING ELEMENTS
 // ============================================
 const driftContainer = document.getElementById('driftKeys');
-const driftEmojis = ['🎈','🎂','💖','🎁','✨'];
+const driftEmojis = ['🔑','🗝️'];
 for (let i = 0; i < 15; i++) {
   const k = document.createElement('div');
   k.className = 'drift-key';
@@ -570,7 +647,7 @@ function burstConfetti(count) {
   }
 }
 // ============================================
-// MUSIC PLAYER
+// MUSIC PLAYER — audio tag, self-hosted mp3
 // ============================================
 const bgMusic = document.getElementById('bgMusic');
 const vinyl = document.getElementById('vinyl');
@@ -600,7 +677,7 @@ bgMusic.addEventListener('play', updatePlayerUI);
 bgMusic.addEventListener('pause', updatePlayerUI);
 vinylWrap.addEventListener('click', () => {
   if (bgMusic.paused) {
-    bgMusic.volume = 0.2;
+    bgMusic.volume = 0.3;
     bgMusic.play().catch(() => {});
   } else {
     bgMusic.pause();
@@ -693,6 +770,21 @@ function applyCard(name, age) {
     flag.dataset.color = flagColors[i % flagColors.length];
     flagsContainer.appendChild(flag);
   }
+  // Fill the export card (separate, condensed — this is what gets downloaded)
+  document.getElementById('exportEyebrow').textContent = 'HAPPY ' + getOrdinalSuffix(userAge).toUpperCase() + ' BIRTHDAY';
+  document.getElementById('exportTitle').textContent = 'For ' + userName + ' 💛';
+  document.getElementById('exportMedalNum').textContent = userAge;
+  document.getElementById('exportMessage').textContent = 'Wishing you so much love, laughter, and good fortune on your special day.';
+  document.getElementById('exportSignoff').textContent = 'Happy birthday, ' + userName + '! 🎂💛';
+  const exportFlagsContainer = document.getElementById('exportFlags');
+  exportFlagsContainer.innerHTML = '';
+  const exportFlagCount = Math.min(userAge, 30);
+  for (let i = 0; i < exportFlagCount; i++) {
+    const flag = document.createElement('div');
+    flag.className = 'export-flag';
+    flag.style.background = flagColors[i % flagColors.length];
+    exportFlagsContainer.appendChild(flag);
+  }
   // Reset states
   opened = false;
   pulled = false;
@@ -753,6 +845,7 @@ pullBtn.addEventListener('click', () => {
 // DOWNLOAD CARD AS IMAGE
 // ============================================
 const downloadBtn = document.getElementById('downloadBtn');
+const downloadBtnLabel = document.getElementById('downloadBtnLabel');
 const downloadFeedback = document.getElementById('downloadFeedback');
 downloadBtn.addEventListener('click', async () => {
   if (typeof html2canvas === 'undefined') {
@@ -761,15 +854,17 @@ downloadBtn.addEventListener('click', async () => {
     return;
   }
   downloadBtn.disabled = true;
-  const originalLabel = downloadBtn.textContent;
-  downloadBtn.textContent = 'Menyiapkan gambar...';
+  const originalLabel = downloadBtnLabel.textContent;
+  downloadBtnLabel.textContent = 'Menyiapkan gambar...';
   try {
-    const target = document.querySelector('.badge-col');
-    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-deep').trim() || '#0A4F50';
+    const target = document.getElementById('exportCard');
     const canvas = await html2canvas(target, {
-      backgroundColor: bgColor,
       scale: 2,
-      useCORS: true
+      useCORS: true,
+      width: 1080,
+      height: 1080,
+      windowWidth: 1080,
+      windowHeight: 1080
     });
     const link = document.createElement('a');
     const safeName = (userName || 'kartu').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -784,7 +879,7 @@ downloadBtn.addEventListener('click', async () => {
     downloadFeedback.classList.add('show');
   } finally {
     downloadBtn.disabled = false;
-    downloadBtn.textContent = originalLabel;
+    downloadBtnLabel.textContent = originalLabel;
   }
 });
 </script>
